@@ -1,0 +1,45 @@
+buildscript {
+    repositories {mavenCentral()}
+
+    dependencies {
+        classpath 'com.bmuschko:gradle-tomcat-plugin:2.1'
+    }
+}
+
+apply plugin: 'groovy'
+apply plugin: 'war'
+apply plugin: 'com.bmuschko.tomcat'
+
+defaultTasks 'clean', 'test', 'war', 'fullZip', 'tomcatRun'
+
+test << { println "Generating cover letter for TPS report"}
+
+repositories {mavenCentral()}
+
+dependencies {
+    compile "org.codehaus.groovy:groovy-all:2.4.3"
+
+    compile 'com.h2database:h2:1.4.187'
+
+    compile "javax.ws.rs:jsr311-api:1.1.1"
+    compile 'com.sun.jersey:jersey-bundle:1.19'
+
+    testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
+
+    tomcat "org.apache.tomcat.embed:tomcat-embed-core:7.0.59"
+    tomcat "org.apache.tomcat.embed:tomcat-embed-logging-juli:7.0.59"
+    tomcat "org.apache.tomcat.embed:tomcat-embed-jasper:7.0.59"
+}
+
+task fullZip(type: Zip) {
+    classifier 'full'
+    from war.outputs.files
+    from('src/') { into('src') }
+    from('.') { include 'build.gradle' }
+}
+
+task srcZip(type: Zip) {
+    classifier 'src'
+    from('src/') { into('src') }
+    from('.') { include 'build.gradle' }
+}
