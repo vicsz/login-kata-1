@@ -28,10 +28,8 @@ class UserController {
     Response addUser(@FormParam("name") String name, @FormParam("password") String password){
         try {
             Sql.withInstance(dbConnectionString) {
-                it.execute("""
-                    CREATE TABLE IF NOT EXISTS user (name VARCHAR PRIMARY KEY, password VARCHAR);
-                    INSERT INTO user (name, password) VALUES ($name, $password)
-                """)
+                it.execute("CREATE TABLE IF NOT EXISTS user (name VARCHAR PRIMARY KEY, password VARCHAR)");
+                it.execute("INSERT INTO user (name, password) VALUES ($name, $password)");
             }
             Response.status(ACCEPTED).build()
         } catch (SQLException exception) {
